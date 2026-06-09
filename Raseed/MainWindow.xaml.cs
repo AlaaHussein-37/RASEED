@@ -36,12 +36,12 @@ public partial class MainWindow : Window
         RootHost.Children.Clear();
         RootHost.Background = BackgroundBrush;
 
-        var shell = new Grid { Margin = new Thickness(24) };
+        var shell = new Grid { Margin = new Thickness(24), FlowDirection = FlowDirection.LeftToRight };
         shell.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.1, GridUnitType.Star) });
         shell.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0.9, GridUnitType.Star) });
 
-        var brand = new StackPanel { VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
-        brand.Children.Add(new Image { Source = Logo(), Width = 270, Height = 210, Stretch = Stretch.Uniform });
+        var brand = new StackPanel { VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center, FlowDirection = FlowDirection.RightToLeft };
+        brand.Children.Add(new Image { Source = Logo(), Width = 250, Height = 180, Stretch = Stretch.Uniform });
         brand.Children.Add(Text("رصيد", 48, FontWeights.Bold, Primary, HorizontalAlignment.Center));
         brand.Children.Add(Text("إدارة الإجازات", 24, FontWeights.Medium, TextPrimary, HorizontalAlignment.Center));
         shell.Children.Add(brand);
@@ -444,8 +444,9 @@ public partial class MainWindow : Window
     private TextBox Input(string placeholder) => new()
     {
         Height = 42,
-        Text = placeholder,
-        Foreground = TextSecondary,
+        Tag = placeholder,
+        Text = string.Empty,
+        Foreground = TextPrimary,
         Background = Brushes.White,
         BorderBrush = BorderBrushSoft,
         BorderThickness = new Thickness(1),
