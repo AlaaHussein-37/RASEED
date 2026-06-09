@@ -1,0 +1,17 @@
+<Window x:Class="Raseed.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="رصيد"
+        Width="1280"
+        Height="800"
+        MinWidth="1100"
+        MinHeight="720"
+        WindowStartupLocation="CenterScreen"
+        FlowDirection="RightToLeft"
+        FontFamily="Tajawal"
+        Background="#F8FAFC">
+    <Window.Resources>
+        <DropShadowEffect x:Key="SoftShadow" BlurRadius="18" ShadowDepth="4" Opacity="0.08" Color="#0F172A"/>
+    </Window.Resources>
+    <Grid x:Name="RootHost"/>
+</Window>
