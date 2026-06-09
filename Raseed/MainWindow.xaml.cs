@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -84,9 +85,9 @@ public partial class MainWindow : Window
         topGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         _pageTitle = Text("الرئيسية", 20, FontWeights.Bold, TextPrimary, VerticalAlignment.Center);
         topGrid.Children.Add(_pageTitle);
-        var user = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
-        user.Children.Add(Text(DateTime.Now.ToString("yyyy/MM/dd"), 13, FontWeights.Medium, TextSecondary, margin: new Thickness(16, 0, 0, 0)));
-        user.Children.Add(Text("أحمد محمد", 13, FontWeights.Bold, TextPrimary));
+        var user = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center, FlowDirection = FlowDirection.RightToLeft };
+        user.Children.Add(Text("أحمد محمد", 13, FontWeights.Bold, TextPrimary, margin: new Thickness(0, 0, 0, 0)));
+        user.Children.Add(Text(DateTime.Now.ToString("yyyy/MM/dd"), 13, FontWeights.Medium, TextSecondary, margin: new Thickness(0, 0, 14, 0)));
         Grid.SetColumn(user, 1);
         topGrid.Children.Add(user);
         top.Child = topGrid;
@@ -370,7 +371,16 @@ public partial class MainWindow : Window
             new("1003", "محمد علي", "المالية", "محاسب", 30, 12, 18, "نشط"),
             new("1004", "مريم حسن", "التسويق", "أخصائي تسويق", 30, 8, 22, "نشط")
         };
-        return DataTableGrid(rows);
+        var table = DataTableGrid(rows);
+        table.Columns.Add(TextColumn("الرقم الوظيفي", "الرقم_الوظيفي", 120));
+        table.Columns.Add(TextColumn("الاسم", "الاسم", 170));
+        table.Columns.Add(TextColumn("القسم", "القسم", 160));
+        table.Columns.Add(TextColumn("المنصب", "المنصب", 150));
+        table.Columns.Add(TextColumn("الرصيد السنوي", "الرصيد_السنوي", 120));
+        table.Columns.Add(TextColumn("المستهلك", "المستهلك", 100));
+        table.Columns.Add(TextColumn("المتبقي", "المتبقي", 100));
+        table.Columns.Add(TextColumn("الحالة", "الحالة", 90));
+        return table;
     }
 
     private DataGrid RequestGrid()
@@ -381,13 +391,19 @@ public partial class MainWindow : Window
             new("سارة أحمد", "إجازة مرضية", "2026-06-09", "2 أيام", "معلّق"),
             new("محمد علي", "إجازة زمنية", "2026-06-10", "4 ساعات", "معلّق")
         };
-        return DataTableGrid(rows);
+        var table = DataTableGrid(rows);
+        table.Columns.Add(TextColumn("الموظف", "الموظف", 180));
+        table.Columns.Add(TextColumn("نوع الإجازة", "نوع_الإجازة", 160));
+        table.Columns.Add(TextColumn("التاريخ", "التاريخ", 130));
+        table.Columns.Add(TextColumn("المدة", "المدة", 110));
+        table.Columns.Add(TextColumn("الحالة", "الحالة", 110));
+        return table;
     }
 
     private DataGrid DataTableGrid<T>(IEnumerable<T> rows) => new()
     {
         ItemsSource = rows,
-        AutoGenerateColumns = true,
+        AutoGenerateColumns = false,
         CanUserAddRows = false,
         IsReadOnly = true,
         RowHeight = 48,
@@ -402,6 +418,23 @@ public partial class MainWindow : Window
         FontSize = 13,
         FlowDirection = FlowDirection.RightToLeft
     };
+
+    private DataGridTextColumn TextColumn(string header, string path, double width)
+    {
+        var textStyle = new Style(typeof(TextBlock));
+        textStyle.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
+        textStyle.Setters.Add(new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.RightToLeft));
+        textStyle.Setters.Add(new Setter(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center));
+        textStyle.Setters.Add(new Setter(FrameworkElement.MarginProperty, new Thickness(12, 0, 12, 0)));
+
+        return new DataGridTextColumn
+        {
+            Header = header,
+            Binding = new Binding(path),
+            Width = new DataGridLength(width),
+            ElementStyle = textStyle
+        };
+    }
 
     private Border ApprovalCard(string name, string type, string period, string duration)
     {
