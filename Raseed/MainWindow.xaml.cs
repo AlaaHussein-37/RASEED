@@ -72,7 +72,7 @@ public partial class MainWindow : Window
     private void ShowShell()
     {
         RootHost.Children.Clear();
-        var root = new Grid { Background = BackgroundBrush, FlowDirection = FlowDirection.LeftToRight };
+        var root = new Grid { Background = BackgroundBrush };
         root.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(240) });
         root.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         root.RowDefinitions.Add(new RowDefinition { Height = new GridLength(60) });
@@ -80,7 +80,7 @@ public partial class MainWindow : Window
 
         var top = new Border { Background = CardBrush, BorderBrush = BorderBrushSoft, BorderThickness = new Thickness(0, 0, 0, 1) };
         Grid.SetColumnSpan(top, 2);
-        var topGrid = new Grid { Margin = new Thickness(20, 0, 20, 0), FlowDirection = FlowDirection.RightToLeft };
+        var topGrid = new Grid { Margin = new Thickness(20, 0, 20, 0) };
         topGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         topGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         _pageTitle = Text("الرئيسية", 20, FontWeights.Bold, TextPrimary, VerticalAlignment.Center);
@@ -104,7 +104,7 @@ public partial class MainWindow : Window
 
     private UIElement Sidebar()
     {
-        var side = new Border { Background = Brush("#082F49"), FlowDirection = FlowDirection.RightToLeft };
+        var side = new Border { Background = Brush("#082F49") };
         Grid.SetRow(side, 1);
         var wrap = new DockPanel { LastChildFill = true };
         var logo = new StackPanel { Margin = new Thickness(18, 18, 18, 16), Orientation = Orientation.Horizontal };
@@ -114,21 +114,10 @@ public partial class MainWindow : Window
         wrap.Children.Add(logo);
 
         var nav = new StackPanel { Margin = new Thickness(12, 4, 12, 12) };
-        foreach (var item in new[] {
-            ("🏠", "الرئيسية"),
-            ("👥", "الموظفون"),
-            ("📅", "الإجازات الاعتيادية"),
-            ("🏥", "الإجازات المرضية"),
-            ("⏱", "الإجازات الزمنية"),
-            ("✅", "الموافقات"),
-            ("📊", "التقارير"),
-            ("⚙", "الإعدادات"),
-            ("🚪", "تسجيل الخروج") })
+        foreach (var item in new[] { "🏠 الرئيسية", "👥 الموظفون", "📅 الإجازات الاعتيادية", "🏥 الإجازات المرضية", "⏱ الإجازات الزمنية", "✅ الموافقات", "📊 التقارير", "⚙ الإعدادات", "🚪 تسجيل الخروج" })
         {
-            var title = item.Item2;
-            var button = Button(string.Empty, Brushes.Transparent, Brushes.White, 40);
-            button.Content = NavContent(item.Item1, item.Item2);
-            button.FlowDirection = FlowDirection.RightToLeft;
+            var title = item[(item.IndexOf(' ') + 1)..];
+            var button = Button(item, Brushes.Transparent, Brushes.White, 40);
             button.HorizontalContentAlignment = HorizontalAlignment.Right;
             button.Margin = new Thickness(0, 4, 0, 0);
             button.Tag = title;
@@ -474,19 +463,6 @@ public partial class MainWindow : Window
         stack.Children.Add(Button("فتح التقرير", Brushes.White, Primary, 38, 130));
         card.Child = stack;
         return card;
-    }
-
-    private StackPanel NavContent(string icon, string title)
-    {
-        var stack = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            FlowDirection = FlowDirection.RightToLeft,
-            HorizontalAlignment = HorizontalAlignment.Right
-        };
-        stack.Children.Add(Text(icon, 14, FontWeights.Bold, Brushes.White, VerticalAlignment.Center, margin: new Thickness(0, 0, 0, 0)));
-        stack.Children.Add(Text(title, 13, FontWeights.Bold, Brushes.White, VerticalAlignment.Center, margin: new Thickness(8, 0, 0, 0)));
-        return stack;
     }
 
     private TextBlock Text(string text, double size, FontWeight weight, Brush brush, HorizontalAlignment align = HorizontalAlignment.Stretch, Thickness? margin = null) =>
